@@ -1,0 +1,8 @@
+## Author: Sappy (Alex)
+## Interface: 90005
+## Name: AnimaCounter
+## Notes: Counts the anima in the player's inventory.
+## Title: AnimaCounter
+## Version: 0.0.0
+
+AnimaCounter.lua
