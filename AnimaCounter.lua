@@ -1,5 +1,3 @@
---/run if (string.find(_G["GameTooltipTextLeft"..2]:GetText(), "Anima")) then print(string.find(_G["GameTooltipTextLeft"..4]:GetText(), "%d+")) end
-
 --[[
 	The purpose of the addon is to tell the player how much anima is in their inventory on demand.
 ]]--
