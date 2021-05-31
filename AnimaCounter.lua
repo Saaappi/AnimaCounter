@@ -19,6 +19,7 @@ SLASH_AnimaCounter2 = "/animacounter";
 SlashCmdList["AnimaCounter"] = function(command, editbox)
 	local _, _, command, arguments = string.find(command, "%s?(%w+)%s?(.*)"); -- Using pattern matching the addon will be able to interpret subcommands.
 	if not command or command == "" then
+		if UnitLevel("player") < 48 then return end; -- Anima can't be collected until at least 48, so don't bother running the code below because Anima won't be found.
 		for bag = 0, 4, 1 do -- Anima can only be stored in the inventory, so scan each bag.
 			for slot = GetContainerNumSlots(bag), 1, -1 do -- Blizzard reads the bag in reverse, so let's match that in code.
 				local _, _, _, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot);
