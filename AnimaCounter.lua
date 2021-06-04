@@ -37,9 +37,9 @@ SlashCmdList["AnimaCounter"] = function(command, editbox)
 			end
 		end
 		if animaTotal == 0 then -- If the player doesn't open their bags shortly after logging in, then Anima detected can be 0.
-			print("|cffefcb42" .. addonName .. "|r: No " .. "|cff66bbff" .. "Anima" .. "|r found. This may be a mistake. Open your bags, then try again.");
+			print("|cffFFFF66" .. addonName .. "|r: No " .. "|cff66bbff" .. "Anima" .. "|r found. This may be a mistake. Open your bags, then try again.");
 		else
-			print("|cffefcb42" .. addonName .. "|r: " .. animaTotal .. " |cff66bbff" .. "Anima" .. "|r");
+			print("|cffFFFF66" .. addonName .. "|r: " .. animaTotal .. " |cff66bbff" .. "Anima" .. "|r");
 		end
 		animaTotal = 0; -- Reset the total to prevent tainting consecutive executions.
 	end
