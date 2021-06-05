@@ -41,8 +41,7 @@ e:SetScript("OnEvent", function(self, event, ...)
 					end
 				end
 				-- If the total anima the player has doesn't match what was previously written to the frame, then update it.
-				a = (TokenFrameContainerButton5Count:GetText()):match("%((%d+)%)");
-				if tonumber(a) ~= tonumber(total) then
+				if tonumber((TokenFrameContainerButton5Count:GetText()):match("%((%d+)%)")) ~= tonumber(total) and total ~= 0 then
 					TokenFrameContainerButton5Count:SetText(TokenFrameContainerButton5Count:GetText() .. " (" .. total .. ")");
 				end
 				total = 0;
