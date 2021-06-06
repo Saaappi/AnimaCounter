@@ -23,7 +23,6 @@ e:SetScript("OnEvent", function(self, event, ...)
 		if UnitLevel("player") < 48 then return end; -- Anima can't be collected until at least 48, so don't bother running the code below because Anima won't be found.
 		if CharacterFrame:IsVisible() then
 			if TokenFrameContainerButton1:IsVisible() then -- Currency Tab: Shadowlands
-				TokenFrameContainerButton5Name:SetText("Anima");
 				for bag = 0, 4, 1 do -- Anima can only be stored in the inventory, so scan each bag.
 					for slot = GetContainerNumSlots(bag), 1, -1 do -- Blizzard reads the bag in reverse, so let's match that in code.
 						local _, _, _, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot);
@@ -40,11 +39,16 @@ e:SetScript("OnEvent", function(self, event, ...)
 						end
 					end
 				end
-				-- If the total anima the player has doesn't match what was previously written to the frame, then update it.
-				if tonumber((TokenFrameContainerButton5Count:GetText()):match("%((%d+)%)")) ~= tonumber(total) and total ~= 0 then
-					TokenFrameContainerButton5Count:SetText(TokenFrameContainerButton5Count:GetText() .. " (" .. total .. ")");
+				for i = 1, 7, 1 do
+					if (_G["TokenFrameContainerButton"..i.."Name"]:GetText() == "Reservoir Anima") then
+						_G["TokenFrameContainerButton"..i.."Name"]:SetText("Anima");
+						if tonumber((_G["TokenFrameContainerButton"..i.."Name"]:GetText()):match("%((%d+)%)")) ~= tonumber(total) and total ~= 0 then
+							_G["TokenFrameContainerButton"..i.."Count"]:SetText(_G["TokenFrameContainerButton"..i.."Count"]:GetText() .. " (" .. total .. ")");
+						end
+						total = 0;
+					end
 				end
-				total = 0;
+				-- If the total anima the player has doesn't match what was previously written to the frame, then update it.
 			end
 		end
 	end
