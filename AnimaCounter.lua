@@ -14,13 +14,14 @@ local addonName, t = ...;
 local a = 0;
 local total = 0;
 local e = CreateFrame("Frame"); -- This is the invisible frame that will listen for registered events.
+local maxLevel = 60;
 
 -- Event Registrations
 e:RegisterEvent("GLOBAL_MOUSE_UP");
 
 e:SetScript("OnEvent", function(self, event, ...)
 	if event == "GLOBAL_MOUSE_UP" then
-		if UnitLevel("player") < 48 then return end; -- Anima can't be collected until at least 48, so don't bother running the code below because Anima won't be found.
+		if UnitLevel("player") < maxLevel then return end;
 		if CharacterFrame:IsVisible() then
 			if TokenFrameContainerButton1:IsVisible() then -- Currency Tab: Shadowlands
 				for bag = 0, 4, 1 do -- Anima can only be stored in the inventory, so scan each bag.
