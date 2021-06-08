@@ -23,33 +23,35 @@ e:SetScript("OnEvent", function(self, event, ...)
 	if event == "GLOBAL_MOUSE_UP" then
 		if UnitLevel("player") < maxLevel then return end;
 		if CharacterFrame:IsVisible() then
-			if TokenFrameContainerButton1:IsVisible() then -- Currency Tab: Shadowlands
-				for bag = 0, 4, 1 do -- Anima can only be stored in the inventory, so scan each bag.
-					for slot = GetContainerNumSlots(bag), 1, -1 do -- Blizzard reads the bag in reverse, so let's match that in code.
-						local _, _, _, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot);
-						if itemID then -- Catch any exception where itemID might be nil.
-							local spellName, spellID = GetItemSpell(itemID);
-							if spellName == "Deposit Anima" then
-								local quantity = GetItemCount(itemID, false); -- This will need to be multipled against the anima from the spell description.
-								local spell = Spell:CreateFromSpellID(spellID); -- GetSpellDescription isn't readily available on call, so create a spell object from the Spell Mixin. We'll get the description from that.
-								spell:ContinueOnSpellLoad(function()
-									local anima = string.match(spell:GetSpellDescription(), "%d+"); -- Extract the amount of anima from the spell's description.
-									total = total + (quantity*anima);
-								end);
+			if TokenFrameContainerButton1 then -- Currency Tab: Shadowlands
+				if TokenFrameContainerButton1:IsVisible() then
+					for bag = 0, 4, 1 do -- Anima can only be stored in the inventory, so scan each bag.
+						for slot = GetContainerNumSlots(bag), 1, -1 do -- Blizzard reads the bag in reverse, so let's match that in code.
+							local _, _, _, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot);
+							if itemID then -- Catch any exception where itemID might be nil.
+								local spellName, spellID = GetItemSpell(itemID);
+								if spellName == "Deposit Anima" then
+									local quantity = GetItemCount(itemID, false); -- This will need to be multipled against the anima from the spell description.
+									local spell = Spell:CreateFromSpellID(spellID); -- GetSpellDescription isn't readily available on call, so create a spell object from the Spell Mixin. We'll get the description from that.
+									spell:ContinueOnSpellLoad(function()
+										local anima = string.match(spell:GetSpellDescription(), "%d+"); -- Extract the amount of anima from the spell's description.
+										total = total + (quantity*anima);
+									end);
+								end
 							end
 						end
 					end
-				end
-				for i = 1, 7, 1 do
-					if (_G["TokenFrameContainerButton"..i.."Name"]:GetText() == "Reservoir Anima") then
-						_G["TokenFrameContainerButton"..i.."Name"]:SetText("Anima");
-						if tonumber((_G["TokenFrameContainerButton"..i.."Name"]:GetText()):match("%((%d+)%)")) ~= tonumber(total) and total ~= 0 then
-							_G["TokenFrameContainerButton"..i.."Count"]:SetText(_G["TokenFrameContainerButton"..i.."Count"]:GetText() .. " (" .. total .. ")");
+					for i = 1, 7, 1 do
+						if (_G["TokenFrameContainerButton"..i.."Name"]:GetText() == "Reservoir Anima") then
+							_G["TokenFrameContainerButton"..i.."Name"]:SetText("Anima");
+							if tonumber((_G["TokenFrameContainerButton"..i.."Name"]:GetText()):match("%((%d+)%)")) ~= tonumber(total) and total ~= 0 then
+								_G["TokenFrameContainerButton"..i.."Count"]:SetText(_G["TokenFrameContainerButton"..i.."Count"]:GetText() .. " (" .. total .. ")");
+							end
+							total = 0;
 						end
-						total = 0;
 					end
+					-- If the total anima the player has doesn't match what was previously written to the frame, then update it.
 				end
-				-- If the total anima the player has doesn't match what was previously written to the frame, then update it.
 			end
 		end
 	end
