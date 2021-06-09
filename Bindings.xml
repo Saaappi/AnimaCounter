@@ -1,0 +1,5 @@
+<Bindings>
+	<Binding name="ANIMACOUNTER_CALCULATE_ANIMA" header="ANIMACOUNTER" category="ADDONS">
+		AnimaCounterCountAnima(GetBindingKey("ANIMACOUNTER_CALCULATE_ANIMA"));
+	</Binding>
+</Bindings>

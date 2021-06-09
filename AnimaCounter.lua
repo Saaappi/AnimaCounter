@@ -11,24 +11,20 @@
 		t			: This is an empty table. This is how the addon can communicate between files or local functions, sort of like traditional classes.
 ]]--
 local addonName, t = ...;
-local currentAnimaCount;
-local e = CreateFrame("Frame"); -- This is the invisible frame that will listen for registered events.
-local maxLevel = 60;
 
--- Event Registrations
-e:RegisterEvent("ADDON_LOADED");
-e:RegisterEvent("BAG_UPDATE");
-e:RegisterEvent("PLAYER_LOGOUT");
+local levelRequiredForAnima = 60;
 
--- Functions
-local function ScanInventoryForAnima()
-	if UnitLevel("player") < maxLevel then return end; -- No reason to account for anyone that isn't at least 60.
-	for bag = 0, 4, 1 do -- Base inventory, plus the 4 additional bags a player can have.
-		for slot = GetContainerNumSlots(bag), 1, -1 do -- Blizzard traverses bags in reverse order, let's follow that logic.
-			local _, _, _, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot);
-			if itemID then
+BINDING_HEADER_ANIMACOUNTER = addonName;
+BINDING_NAME_ANIMACOUNTER_CALCULATE_ANIMA = "Calculate Anima";
+function AnimaCounterCountAnima(key)
+	if (UnitLevel("player") < levelRequiredForAnima) then return end
+	if key == GetBindingKey("ANIMACOUNTER_CALCULATE_ANIMA") then
+		local currentAnimaCount = 0;
+		for bag = 0, 4, 1 do -- Base inventory, plus the 4 additional bags a player can have.
+			for slot = GetContainerNumSlots(bag), 1, -1 do -- Blizzard traverses bags in reverse order, let's follow that logic.
+				local _, _, _, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot);
 				local spellName, spellID = GetItemSpell(itemID);
-				if spellName == "Deposit Anima" then
+				if (spellName == "Deposit Anima") then
 					local quantity = GetItemCount(itemID, false); -- This will need to be multipled against the anima from the spell description.
 					local spell = Spell:CreateFromSpellID(spellID); -- GetSpellDescription isn't readily available on call, so create a spell object from the Spell Mixin. We'll get the description from that.
 					spell:ContinueOnSpellLoad(function()
@@ -38,24 +34,6 @@ local function ScanInventoryForAnima()
 				end
 			end
 		end
-	end
-	if IsShiftKeyDown() then
-		if (tonumber(currentAnimaCount) > 0) then
-			GameTooltip:AddLine("Anima Count: ", currentAnimaCount);
-		end
+		print("|cffFFD839" .. addonName .. "|r: " .. currentAnimaCount .. " |cff5BA4E1Anima|r");
 	end
 end
-
-e:SetScript("OnEvent", function(self, event, addon)
-	if event == "ADDON_LOADED" and addon == addonName then
-		currentAnimaCount = AnimaCounterAnimaCount or 0;
-	end
-	if event == "BAG_UPDATE" then
-		ScanInventoryForAnima();
-	end
-	if event == "PLAYER_LOGOUT" then
-		AnimaCounterAnimaCount = currentAnimaCount;
-	end
-end);
-
-GameTooltip:HookScript("OnTooltipSetItem", ScanInventoryForAnima);
