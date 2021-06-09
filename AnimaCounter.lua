@@ -11,48 +11,51 @@
 		t			: This is an empty table. This is how the addon can communicate between files or local functions, sort of like traditional classes.
 ]]--
 local addonName, t = ...;
-local a = 0;
-local total = 0;
+local currentAnimaCount;
 local e = CreateFrame("Frame"); -- This is the invisible frame that will listen for registered events.
 local maxLevel = 60;
 
 -- Event Registrations
-e:RegisterEvent("GLOBAL_MOUSE_UP");
+e:RegisterEvent("ADDON_LOADED");
+e:RegisterEvent("BAG_UPDATE");
+e:RegisterEvent("PLAYER_LOGOUT");
 
-e:SetScript("OnEvent", function(self, event, ...)
-	if event == "GLOBAL_MOUSE_UP" then
-		if UnitLevel("player") < maxLevel then return end;
-		if CharacterFrame:IsVisible() then
-			if TokenFrameContainerButton1 then -- Currency Tab: Shadowlands
-				if TokenFrameContainerButton1:IsVisible() then
-					for bag = 0, 4, 1 do -- Anima can only be stored in the inventory, so scan each bag.
-						for slot = GetContainerNumSlots(bag), 1, -1 do -- Blizzard reads the bag in reverse, so let's match that in code.
-							local _, _, _, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot);
-							if itemID then -- Catch any exception where itemID might be nil.
-								local spellName, spellID = GetItemSpell(itemID);
-								if spellName == "Deposit Anima" then
-									local quantity = GetItemCount(itemID, false); -- This will need to be multipled against the anima from the spell description.
-									local spell = Spell:CreateFromSpellID(spellID); -- GetSpellDescription isn't readily available on call, so create a spell object from the Spell Mixin. We'll get the description from that.
-									spell:ContinueOnSpellLoad(function()
-										local anima = string.match(spell:GetSpellDescription(), "%d+"); -- Extract the amount of anima from the spell's description.
-										total = total + (quantity*anima);
-									end);
-								end
-							end
-						end
-					end
-					for i = 1, 7, 1 do
-						if (_G["TokenFrameContainerButton"..i.."Name"]:GetText() == "Reservoir Anima") then
-							_G["TokenFrameContainerButton"..i.."Name"]:SetText("Anima");
-							if tonumber((_G["TokenFrameContainerButton"..i.."Name"]:GetText()):match("%((%d+)%)")) ~= tonumber(total) and total ~= 0 then
-								_G["TokenFrameContainerButton"..i.."Count"]:SetText(_G["TokenFrameContainerButton"..i.."Count"]:GetText() .. " (" .. total .. ")");
-							end
-							total = 0;
-						end
-					end
-					-- If the total anima the player has doesn't match what was previously written to the frame, then update it.
+-- Functions
+local function ScanInventoryForAnima()
+	if UnitLevel("player") < maxLevel then return end; -- No reason to account for anyone that isn't at least 60.
+	for bag = 0, 4, 1 do -- Base inventory, plus the 4 additional bags a player can have.
+		for slot = GetContainerNumSlots(bag), 1, -1 do -- Blizzard traverses bags in reverse order, let's follow that logic.
+			local _, _, _, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot);
+			if itemID then
+				local spellName, spellID = GetItemSpell(itemID);
+				if spellName == "Deposit Anima" then
+					local quantity = GetItemCount(itemID, false); -- This will need to be multipled against the anima from the spell description.
+					local spell = Spell:CreateFromSpellID(spellID); -- GetSpellDescription isn't readily available on call, so create a spell object from the Spell Mixin. We'll get the description from that.
+					spell:ContinueOnSpellLoad(function()
+						local animaCountInDescription = string.match(spell:GetSpellDescription(), "%d+"); -- Extract the amount of anima from the spell's description.
+						currentAnimaCount = currentAnimaCount + (quantity * animaCountInDescription);
+					end);
 				end
 			end
 		end
 	end
+	if IsShiftKeyDown() then
+		if (tonumber(currentAnimaCount) > 0) then
+			GameTooltip:AddLine("Anima Count: ", currentAnimaCount);
+		end
+	end
+end
+
+e:SetScript("OnEvent", function(self, event, addon)
+	if event == "ADDON_LOADED" and addon == addonName then
+		currentAnimaCount = AnimaCounterAnimaCount or 0;
+	end
+	if event == "BAG_UPDATE" then
+		ScanInventoryForAnima();
+	end
+	if event == "PLAYER_LOGOUT" then
+		AnimaCounterAnimaCount = currentAnimaCount;
+	end
 end);
+
+GameTooltip:HookScript("OnTooltipSetItem", ScanInventoryForAnima);
