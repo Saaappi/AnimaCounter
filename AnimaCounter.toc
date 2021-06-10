@@ -2,6 +2,7 @@
 ## Interface: 90005
 ## Name: AnimaCounter
 ## Notes: Counts the anima in the player's inventory.
+## SavedVariablesPerCharacter: AnimaCounterAnimaInReservoir
 ## Title: AnimaCounter
 ## Version: 0.0.0
 

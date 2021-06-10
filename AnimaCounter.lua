@@ -34,6 +34,19 @@ function AnimaCounterCountAnima(key)
 				end
 			end
 		end
-		print("|cffFFD839" .. addonName .. "|r: " .. currentAnimaCount .. " |cff5BA4E1Anima|r");
+		if (CharacterFrameTab3:IsVisible()) then
+			for i = 1, 10, 1 do
+				local text = _G["TokenFrameContainerButton"..i.."Name"]:GetText();
+				if (text == "Reservoir Anima") then
+					AnimaCounterAnimaInReservoir = tonumber(string.gsub(_G["TokenFrameContainerButton"..i.."Count"]:GetText(), "%,", ""));
+					break
+				end
+			end
+		end
+		if (AnimaCounterAnimaInReservoir ~= nil) then
+			print("|cffFFD839" .. addonName .. "|r: " .. currentAnimaCount .. " |cff5BA4E1Anima|r (" .. AnimaCounterAnimaInReservoir .. ") (" .. (currentAnimaCount + AnimaCounterAnimaInReservoir) .. ")");
+		else
+			print("|cffFFD839" .. addonName .. "|r: " .. currentAnimaCount .. " |cff5BA4E1Anima|r");
+		end
 	end
 end
