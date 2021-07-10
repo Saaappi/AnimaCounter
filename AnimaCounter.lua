@@ -11,7 +11,7 @@
 		t			: This is an empty table. This is how the addon can communicate between files or local functions, sort of like traditional classes.
 ]]--
 local addonName, t = ...;
-local levelRequiredForAnima = 60;
+local levelRequiredForAnima = 51;
 
 BINDING_HEADER_ANIMACOUNTER = addonName;
 BINDING_NAME_ANIMACOUNTER_CALCULATE_ANIMA = "Calculate Anima & Cataloged Research";
