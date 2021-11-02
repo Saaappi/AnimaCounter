@@ -1,5 +1,5 @@
 ## Author: Sappy (Alex)
-## Interface: 90100
+## Interface: 90105
 ## Name: AnimaCounter
 ## Notes: Counts the anima in the player's inventory.
 ## SavedVariablesPerCharacter: AnimaCounterAnimaInReservoir
