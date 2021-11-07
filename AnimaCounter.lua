@@ -44,6 +44,7 @@ function AnimaCounterCountAnima(key)
 		
 		AnimaCounterAnimaInReservoir = C_CurrencyInfo.GetCurrencyInfo(1813).quantity;
 		CatalogedResearchCounterOwnedByPlayer = C_CurrencyInfo.GetCurrencyInfo(1931).quantity;
-		print("|cffFFD839" .. addonName .. "|r\n" .. currentAnimaCount .. " |cff5BA4E1Anima|r (" .. (currentAnimaCount + AnimaCounterAnimaInReservoir) .. " |T3528288:0|t)\n" .. currentCatalogedResearchCount .. " |cffD4C79DCataloged Research|r (" .. (currentCatalogedResearchCount + CatalogedResearchCounterOwnedByPlayer) .. " |T1506458:0|t)");
+		local RedeemedSoulsOwnedByPlayer = C_CurrencyInfo.GetCurrencyInfo(1810).quantity;
+		print("|cffFFD839" .. addonName .. "|r\n" .. currentAnimaCount .. " |cff5BA4E1Anima|r (" .. (currentAnimaCount + AnimaCounterAnimaInReservoir) .. " |T3528288:0|t)\n" .. currentCatalogedResearchCount .. " |cffD4C79DCataloged Research|r (" .. (currentCatalogedResearchCount + CatalogedResearchCounterOwnedByPlayer) .. " |T1506458:0|t)" .. "\n" .. C_CurrencyInfo.GetCurrencyInfo(1810).quantity .. " |cff0070ddRedeemed Souls|r " .. "|T1391776:0|t");
 	end
 end
