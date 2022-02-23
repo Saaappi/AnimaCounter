@@ -34,7 +34,7 @@ function AnimaCounterCountAnima(key)
 		CatalogedResearchCounterOwnedByPlayer = C_CurrencyInfo.GetCurrencyInfo(1931).quantity
 		print("|cffFFD839" .. addonName .. "|r\n" .. 
 		currentAnimaCount .. " |cff5BA4E1Anima|r (" .. (currentAnimaCount + AnimaCounterAnimaInReservoir) .. " |T3528288:0|t)\n" .. 
-		currentCatalogedResearchCount .. " |cff1eff00Cataloged Research|r (" .. (currentCatalogedResearchCount + CatalogedResearchCounterOwnedByPlayer) .. " |T1506458:0|t)" .. "\n" ..
+		currentCatalogedResearchCount .. " |cff88AADCCataloged Research|r (" .. (currentCatalogedResearchCount + CatalogedResearchCounterOwnedByPlayer) .. " |T1506458:0|t)" .. "\n" ..
 		C_CurrencyInfo.GetCurrencyInfo(1810).quantity .. " |cff0070ddRedeemed Souls|r " .. "|T1391776:0|t" .. "\n" ..
 		C_CurrencyInfo.GetCurrencyInfo(1979).quantity .. " |cff0070ddCyphers of the First Ones|r " .. "|T3950362:0|t"
 		)
