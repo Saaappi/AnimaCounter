@@ -1,14 +1,13 @@
 local addonName, t = ...
 local levelRequiredForAnima = 51
 
-local animaCount = 0
-local researchCount = 0
-
 BINDING_HEADER_ANIMACOUNTER = addonName;
 BINDING_NAME_ANIMACOUNTER_CALCULATE_ANIMA = "Calculate Anima & Cataloged Research";
 function AnimaCounterCountAnima(key)
 	if (UnitLevel("player") < levelRequiredForAnima) then return end
 	if key == GetBindingKey("ANIMACOUNTER_CALCULATE_ANIMA") then
+		local animaCount = 0
+		local researchCount = 0
 		for bag = 0, 4, 1 do -- Base inventory, plus the 4 additional bags a player can have.
 			for slot = GetContainerNumSlots(bag), 1, -1 do -- Blizzard traverses bags in reverse order, let's follow that logic.
 				local _, count, _, _, _, _, _, _, _, itemID = GetContainerItemInfo(bag, slot);
